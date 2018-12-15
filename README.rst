@@ -55,29 +55,29 @@ provide the full authentication service.
 Potential applications
 ----------------------
 
-1. An **internal single sign-on** service
+An **internal single sign-on** service:
 
-  - Useful for systems with in-house user account bases: internal webapps avoid
-    reinventing the wheel by using battle-tested WAA implementations.
-  - Easier to develop an internal login system in this way: half the work (the
-    WAA side) is already done.
-  - Internal webapps no longer need to roll their own authentication
-    systems/databases, and access to passwords can be kept in a centralised
-    location.
-  - *Sounds a lot like the Raven service*, but webapps can authenticate against
-    an entirely different user database.
+- Useful for systems with in-house user account bases: internal webapps avoid
+  reinventing the wheel by using battle-tested WAA implementations.
+- Easier to develop an internal login system in this way: half the work (the
+  WAA side) is already done.
+- Internal webapps no longer need to roll their own authentication
+  systems/databases, and access to passwords can be kept in a centralised
+  location.
+- *Sounds a lot like the Raven service*, but webapps can authenticate against
+  an entirely different user database.
 
-2. **Two-headed** login service
+**Two-headed** login service:
 
-  - Users can authenticate using either locally-administered credentials, or by
-    being 'referred' to Raven (where the WLS redirects the client browser to
-    Raven using the same request parameters).
-  - Integrates authentication of local guest, external or special (e.g.
-    administrator) accounts with that of mainstream Raven users, creating
-    a unified login process regardless of the 'source' of the user's identity.
-  - Similar to local *vs.* Raven login options on many websites and CMSes, but
-    can be managed institution-wide rather than having to maintain decoupled
-    sets of passwords on each installation of WordPress, Drupal, *etc.*
+- Users can authenticate using either locally-administered credentials, or by
+  being 'referred' to Raven (where the WLS redirects the client browser to
+  Raven using the same request parameters).
+- Integrates authentication of local guest, external or special (e.g.
+  administrator) accounts with that of mainstream Raven users, creating
+  a unified login process regardless of the 'source' of the user's identity.
+- Similar to local *vs.* Raven login options on many websites and CMSes, but
+  can be managed institution-wide rather than having to maintain decoupled sets
+  of passwords on each installation of WordPress, Drupal, *etc.*
 
 The above two use-cases essentially offer the same benefits that Raven does,
 but with the added advantage that users don't need a Raven account to benefit
@@ -87,14 +87,14 @@ local credentials.
 
 The next use-case is different...
 
-3. **Stricter authentication requirements** than what Raven provides
+**Stricter authentication requirements** than what Raven provides:
 
-  - Useful for sensitive applications
-  - Require both a username/password (possibly from either Raven or local
-    credentials; see above) as well as multi-factor authentication methods such
-    as a one-time password (OTP).
-  - OTP secrets can be kept and managed centrally; the webapp never sees them
-    or the OTP responses.
+- Useful for sensitive applications
+- Require both a username/password (possibly from either Raven or local
+  credentials; see above) as well as multi-factor authentication methods such
+  as a one-time password (OTP).
+- OTP secrets can be kept and managed centrally; the webapp never sees them or
+  the OTP responses.
 
 
 Contributing
