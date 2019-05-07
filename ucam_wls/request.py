@@ -76,7 +76,7 @@ class AuthRequest:
         if cls.REQUIRED_PARAMS - set(d.keys()) != set():
             raise InvalidAuthRequest(
                 "Missing required parameters: %s" %
-                ', '.join(REQUIRED_PARAMS - set(d.keys()))
+                ', '.join(cls.REQUIRED_PARAMS - set(d.keys()))
             )
 
         extra_params = set(d.keys()) - (cls.VALID_PARAMS)

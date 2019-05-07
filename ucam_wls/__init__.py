@@ -1,8 +1,8 @@
 "ucam_wls top-level module.  The entire public API is made available here."
 
-from . import service, request, response, signing
+from . import context, request, response, signing
 
-from .service import AuthPrincipal, LoginService
+from .context import AuthPrincipal, LoginService
 from .request import AuthRequest
 from .response import AuthResponse
 from .signing import Key
@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.backends import default_backend
 
 
-__all__ = ["service", "request", "response", "signing",
+__all__ = ["context", "request", "response", "signing",
            "AuthPrincipal", "LoginService",
            "AuthRequest", "AuthResponse", "Key",
            "load_private_key"]
