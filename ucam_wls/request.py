@@ -74,7 +74,7 @@ class AuthRequest:
 
         if cls.REQUIRED_PARAMS - set(d.keys()) != set():
             raise InvalidAuthRequest(
-                "Missing required parameters: %s" %
+                "Missing required parameter(s): %s" %
                 ', '.join(cls.REQUIRED_PARAMS - set(d.keys()))
             )
 
@@ -84,7 +84,7 @@ class AuthRequest:
                 for k in extra_params:
                     del d[k]
             else:
-                raise InvalidAuthRequest("Unknown parameters %s" %
+                raise InvalidAuthRequest("Unknown parameter(s): %s" %
                                          ', '.join(extra_params))
 
         try:
