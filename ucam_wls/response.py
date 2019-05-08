@@ -52,7 +52,7 @@ class AuthResponse:
             (code != status.SUCCESS and principal != '')):
             raise ValueError("principal must only be given if "
                              "authentication was successful")
-        if auth == '' and len(sso) == 0:
+        if code == status.SUCCESS and auth == '' and len(sso) == 0:
             raise ValueError("sso must be given if auth is not given")
 
         self.ver = ver
