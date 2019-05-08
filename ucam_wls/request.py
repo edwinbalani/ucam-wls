@@ -17,8 +17,7 @@ class AuthRequest:
     IGNORED_PARAMS = {'skew'}
 
     def __init__(self, ver, url, desc='', aauth='', iact='', msg='', params='',
-                 date='', fail=''):
-        print(ver)
+                 date='', fail='', skew=None):
         self.ver = int(ver)
         self.url = clean_url(url)
         self.desc = desc
