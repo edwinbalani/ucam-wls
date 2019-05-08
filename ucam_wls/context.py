@@ -1,3 +1,5 @@
+import datetime
+
 from . import status
 from .errors import InvalidAuthRequest, ProtocolVersionUnsupported, NoMutualAuthType
 from .signing import Key
@@ -97,7 +99,7 @@ class LoginService:
             raise ValueError("WAA demanded passive authentication (iact == 'no')")
 
         if life is None and principal.session_expiry is not None:
-            life = (datetime.datetime.utcnow() - principal.session_expiry).total_seconds()
+            life = int((principal.session_expiry - datetime.datetime.utcnow()).total_seconds())
 
         response = AuthResponse.respond_to_request(
             request=request, code=status.SUCCESS, principal=principal.userid,
@@ -145,8 +147,7 @@ class LoginService:
             raise ValueError("no authentication methods specified for `sso`")
 
         if principal.session_expiry is not None:
-            life = (datetime.datetime.utcnow() - principal.session_expiry)\
-                    .total_seconds()
+            life = int((principal.session_expiry - datetime.datetime.utcnow()).total_seconds())
         else:
             life = None
 
