@@ -1,8 +1,5 @@
 from . import status
-from .errors import (
-    InvalidAuthRequest, CannotHandleRequest, ProtocolVersionUnsupported, 
-    NoMutualAuthType,
-)
+from .errors import InvalidAuthRequest, ProtocolVersionUnsupported, NoMutualAuthType
 from .signing import Key
 from .response import AuthResponse
 
@@ -47,15 +44,11 @@ class LoginService:
         else:
             return True
 
-    def can_handle(self, request):
-        return (request.data_valid and request.version_supported
-                and self.have_mutual_auth_type(request))
-
-    def _pre_response(self, request, skip_handling_check):
+    def _pre_response(self, request, skip_handling_check, check_auth_types=True):
         if not skip_handling_check:
             if not request.data_valid:
                 raise InvalidAuthRequest
-            if not self.have_mutual_auth_type(request):
+            if check_auth_types and not self.have_mutual_auth_type(request):
                 raise NoMutualAuthType(
                     "WLS supports %s; WAA wants one of %s" % (
                         self.auth_methods, request.aauth
@@ -63,8 +56,6 @@ class LoginService:
                 )
             if not request.version_supported:
                 raise ProtocolVersionUnsupported(request.ver)
-            if not self.can_handle(request):
-                raise CannotHandleRequest
 
     def _finish_response(self, response, sign=True, force_signature=False):
         if sign or response.requires_signature:
@@ -194,7 +185,7 @@ class LoginService:
             function is to go ahead and sign anyway, but this can be turned off
             if really desired.
         """
-        self._pre_response(request, skip_handling_check)
+        self._pre_response(request, skip_handling_check, check_auth_types=False)
 
         if request.fail:
             raise ValueError("WAA specified that WLS must not redirect "
