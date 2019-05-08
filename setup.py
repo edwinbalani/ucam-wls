@@ -7,7 +7,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='ucam-wls',
-    version='0.0.1',
+    version='0.0.2',
     author="Edwin Bahrami Balani",
     author_email="eb677@srcf.net",
     license="MIT",
