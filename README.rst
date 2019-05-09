@@ -97,6 +97,16 @@ The next use-case is different...
   the OTP responses.
 
 
+Example WLS implementation
+--------------------------
+
+A simple implementation of a WLS using this library, and similar in nature to
+the `Raven demo server`_, is available in the `wls-demo`_ repository.
+
+.. _Raven demo server: https://demo.raven.cam.ac.uk/
+.. _wls-demo: https://github.com/edwinbalani/wls-demo
+
+
 Contributing
 ------------
 
@@ -133,9 +143,7 @@ application developers will interface with it properly!)
 What this library does and doesn't do
 -------------------------------------
 
-It's important to remember that this is a *library*, not a full-blown solution.
-
-``ucam-wls`` *will*:
+``ucam-wls`` is a *library*, not a complete solution.  Accordingly, it will:
 
 * Provide a **high-level interface** to a protocol-compliant implementation of
   a WLS.
@@ -145,10 +153,11 @@ It's important to remember that this is a *library*, not a full-blown solution.
 * Generate signed authentication responses with the appropriate status code,
   using a provided RSA private key.
 
-``ucam-wls`` *won't*:
+But ``ucam-wls`` *won't*:
 
-* Run a fully-blown authentication server, checking usernames/passwords.
-* Serve a web interface for users to authenticate.
+* Run a fully-blown authentication server that checks usernames/passwords.
+* Serve a web interface for users to authenticate.  (See `wls-demo`_ for an
+  example of this.)
 * Manage your RSA private keys for you.
 
 
@@ -166,3 +175,6 @@ Credits and copyright
 
 ``ucam-wls`` is authored by `Edwin Balani <https://github.com/edwinbalani/>`_,
 and released under the terms of the MIT License.
+
+The Ucam-WebAuth/WAA2WLS protocol was designed by `Jon Warbrick
+<http://people.ds.cam.ac.uk/jw35/>`_.
