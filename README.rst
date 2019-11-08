@@ -2,8 +2,8 @@
 ucam-wls: a Raven-like login service library
 ============================================
 
-`Documentation <#>`_ [todo] |
-`PyPI <#>`_ [todo] |
+`Documentation <https://eb677.user.srcf.net/ucam_wls/>`_ [WIP] |
+`PyPI <https://pypi.org/project/ucam-wls/>`_ |
 `GitHub <https://github.com/edwinbalani/ucam-wls>`_
 
 ``ucam-wls`` is a Python library to implement the *web login service* (WLS)
@@ -42,7 +42,7 @@ is intended to be easily integrated into a custom or in-house application to
 provide the full authentication service.
 
 .. _Ucam-WebAuth: https://raven.cam.ac.uk/project/waa2wls-protocol.txt
-.. _Raven authentication service: https://raven.cam.ac.uk/project/
+.. _Raven authentication service: https://raven.cam.ac.uk/
 .. _Raven project page: https://raven.cam.ac.uk/project/
 .. _mod_ucam_webauth: https://github.com/cambridgeuniversity/mod_ucam_webauth
 .. _ucam-webauth-php: https://github.com/cambridgeuniversity/ucam-webauth-php
@@ -113,13 +113,7 @@ Contributing
 There is a long **to-do list** on this project.  It includes:
 
 * Writing unit tests
-* Refining documentation of the public API, and getting a Read the Docs site
-  going.
-* Providing an example implementation of a WLS using the library (possibly in
-  another repository, or bundled into the ``ucam-wls`` Python package).
-  **Importantly**, the Raven demo key (with key ID 901), with its publicly
-  disclosed private key, should be used to signify that no useful
-  authentication information is provided.
+* Improving API documentation
 
 If you are keen to help out on any of the above (or indeed anything else), then
 please fork, commit and submit a pull request!  Maybe `get in touch
@@ -129,9 +123,9 @@ please fork, commit and submit a pull request!  Maybe `get in touch
 A warning
 ---------
 
-``ucam-wls`` is currently **experimental, pre-alpha quality software**.  It has
-not been tested heavily (yet), and no guarantees can be made regarding its
-security or robustness.
+``ucam-wls`` is currently **alpha quality software**.  It has not been tested
+heavily (yet), so no guarantees can be made regarding its security or
+robustness.
 
 For example, while the library attempts to make *some* checks on input
 arguments (regarding types, values, validity *etc.*), it is still definitely
@@ -145,15 +139,14 @@ What this library does and doesn't do
 
 ``ucam-wls`` is a *library*, not a complete solution.  Accordingly, it will:
 
-* Provide a **high-level interface** to a protocol-compliant implementation of
-  a WLS.
-* Accept authentication requests as URL **query strings**, a Python
-  **dictionary** of parameters, or as **keyword arguments** to a class
-  constructor function.
+* Provide a high-level interface to a protocol-compliant implementation of a
+  WLS.
+* Accept authentication requests as URL query strings, a Python dictionary of
+  parameters, or as keyword arguments to a class constructor function.
 * Generate signed authentication responses with the appropriate status code,
   using a provided RSA private key.
 
-But ``ucam-wls`` *won't*:
+But ``ucam-wls`` won't:
 
 * Run a fully-blown authentication server that checks usernames/passwords.
 * Serve a web interface for users to authenticate.  (See `wls-demo`_ for an
