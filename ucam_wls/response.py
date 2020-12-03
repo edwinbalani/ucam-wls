@@ -3,6 +3,8 @@ import random
 from datetime import datetime
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
+from typing import Any, Dict, Iterable, Optional
+
 from . import status
 from .errors import SignatureNeeded
 from .request import AuthRequest
@@ -17,7 +19,7 @@ def encode_response_part(part):
 
 class AuthResponse:
     @classmethod
-    def respond_to_request(cls, request, code, *args, **kwargs):
+    def respond_to_request(cls, request: AuthRequest, code: int, *args, **kwargs):
         if not isinstance(request, AuthRequest):
             raise TypeError("request must be an AuthRequest instance")
         if not isinstance(code, int):
@@ -29,10 +31,13 @@ class AuthResponse:
     PARAMS = {'code', 'principal', 'msg', 'issue', 'id', 'url', 'ptags', 'auth',
               'sso', 'life', 'params', 'kid', 'signature'}
 
-    def __init__(self, ver, code, url, params, principal=None, msg=None,
-                 issue=None, ptags=None, auth=None, sso=None, life=None):
+    def __init__(self, ver: int, code: int, url: str, params: str,
+                 principal: Optional[str] = None, msg: Optional[str] = None,
+                 issue: Optional[datetime] = None, ptags: Iterable[str] = None,
+                 auth: Optional[str] = None, sso: Optional[str] = None,
+                 life: Optional[int] = None) -> None:
         if not isinstance(code, int):
-            raise TypeError("code %r should be an integer" % code)
+            raise TypeError("code %r must be an integer" % code)
 
         if principal is None:
             principal = ''
@@ -72,26 +77,26 @@ class AuthResponse:
         self.signature = None
 
     @property
-    def as_dict(self):
-        return {k: getattr(self, k) for k in PARAMS}
+    def as_dict(self) -> Dict[str, Any]:
+        return {k: getattr(self, k) for k in self.PARAMS}
 
     @property
-    def signature_b64(self):
+    def signature_b64(self) -> str:
         if self.signature is None:
             return None
         return base64.b64encode(self.signature).decode()\
                .replace('+', '-').replace('/', '.').replace('=', '_')
 
     @property
-    def requires_signature(self):
+    def requires_signature(self) -> bool:
         return self.code == status.SUCCESS
 
     @property
-    def is_signed(self):
+    def is_signed(self) -> bool:
         return self.signature is not None
 
     @property
-    def message_to_sign(self):
+    def message_to_sign(self) -> str:
         parts = [self.ver, self.code, self.msg,
                  datetime_to_protocol(self.issue),
                  self.id, self.url, self.principal] + \
@@ -100,7 +105,7 @@ class AuthResponse:
         return '!'.join(map(encode_response_part, parts))
 
     @property
-    def response_string(self):
+    def response_string(self) -> str:
         if self.requires_signature and not self.is_signed:
             raise SignatureNeeded("response code is %d" % self.code)
 
@@ -111,7 +116,7 @@ class AuthResponse:
         ])
 
     @property
-    def redirect_url(self):
+    def redirect_url(self) -> str:
         scheme, netloc, path, orig_query, _ = urlsplit(self.url)
 
         if self.ver == 1:

@@ -3,7 +3,7 @@ import datetime
 TIMESTAMP_FORMAT = "%Y%m%dT%H%M%SZ"
 
 
-def datetime_to_protocol(dt):
+def datetime_to_protocol(dt: datetime.datetime) -> str:
     """
     Format a Python :class:`datetime` object into a string as required by the
     WAA2WLS protocol.
@@ -11,7 +11,8 @@ def datetime_to_protocol(dt):
     return dt.strftime(TIMESTAMP_FORMAT)
 
 
-def datetime_from_protocol(date_string, naive=False):
+def datetime_from_protocol(date_string: str, naive: bool = False
+    ) -> datetime.datetime:
     """
     Decode a date string in the format specified in the WAA2WLS protocol,
     returning a Python :class:`datetime` object.

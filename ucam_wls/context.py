@@ -1,12 +1,15 @@
 import datetime
+from typing import Iterable, Optional
 
 from . import status
 from .errors import InvalidAuthRequest, ProtocolVersionUnsupported, NoMutualAuthType
 from .signing import Key
 from .response import AuthResponse
+from .request import AuthRequest
 
 class AuthPrincipal:
-    def __init__(self, userid, auth_methods, ptags=None, session_expiry=None):
+    def __init__(self, userid, auth_methods, ptags=None, session_expiry=None
+        ) -> None:
         self.userid = userid
         self.auth_methods = auth_methods
         if ptags is None:
@@ -34,19 +37,20 @@ class LoginService:
         key (ucam_wls.signing.Key): a private key to be used to sign responses
         auth_methods (list): a list of supported authentication methods
     """
-    def __init__(self, key, auth_methods):
+    def __init__(self, key: Key, auth_methods: Iterable[str]) -> None:
         if not isinstance(key, Key):
             raise TypeError("key must be a ucam_wls.signing.Key instance")
         self.key = key
         self.auth_methods = auth_methods
 
-    def have_mutual_auth_type(self, request):
+    def have_mutual_auth_type(self, request: AuthRequest) -> bool:
         if request.aauth and any(request.aauth):
             return set(request.aauth) & set(self.auth_methods) != set()
         else:
             return True
 
-    def _pre_response(self, request, skip_handling_check, check_auth_types=True):
+    def _pre_response(self, request: AuthRequest, skip_handling_check: bool,
+                      check_auth_types: bool = True) -> None:
         if not skip_handling_check:
             if not request.data_valid:
                 raise InvalidAuthRequest
@@ -59,14 +63,18 @@ class LoginService:
             if not request.version_supported:
                 raise ProtocolVersionUnsupported(request.ver)
 
-    def _finish_response(self, response, sign=True, force_signature=False):
+    def _finish_response(self, response: AuthResponse, sign: bool = True,
+                         force_signature: bool = False) -> AuthResponse:
         if sign or response.requires_signature:
             if not response.is_signed or force_signature:
                 self.key.sign(response)
         return response
 
-    def authenticate_active(self, request, principal, auth, life=None,
-                            sign=True, skip_handling_check=False, *args, **kwargs):
+    def authenticate_active(self, request: AuthRequest, principal: AuthPrincipal,
+                            auth: str, life: Optional[int] = None,
+                            sign: bool = True,
+                            skip_handling_check: bool = False,
+                            *args, **kwargs) -> AuthResponse:
         """Generate a WLS 'success' response based on interaction with the user
 
         This function creates a WLS response specifying that the principal was
@@ -107,8 +115,10 @@ class LoginService:
         )
         return self._finish_response(response=response, sign=sign)
 
-    def authenticate_passive(self, request, principal, sso=[], sign=True,
-                             skip_handling_check=False, *args, **kwargs):
+    def authenticate_passive(self, request: AuthRequest, principal:AuthPrincipal,
+                             sso: Iterable = frozenset(), sign: bool = True,
+                             skip_handling_check: bool = False,
+                             *args, **kwargs) -> AuthResponse:
         """Generate a WLS 'success' response based on a pre-existing identity
 
         This function creates a WLS response specifying that the principal was
@@ -157,8 +167,10 @@ class LoginService:
         )
         return self._finish_response(response=response, sign=sign)
 
-    def generate_failure(self, code, request, msg='', sign=True,
-                         skip_handling_check=False, *args, **kwargs):
+    def generate_failure(self, code: int, request: AuthRequest,
+                         msg: str = '', sign: bool = True,
+                         skip_handling_check: bool = False,
+                         *args, **kwargs) -> AuthResponse:
         """Generate a response indicating failure.
 
         This is to be used in all cases where the outcome of user interaction

@@ -1,4 +1,5 @@
 from urllib.parse import parse_qs, urlsplit, urlunsplit, urlencode
+from typing import Any, Dict, Mapping
 
 from .errors import InvalidAuthRequest, ProtocolVersionUnsupported
 
@@ -16,8 +17,9 @@ class AuthRequest:
     VALID_PARAMS = REQUIRED_PARAMS | OPTIONAL_PARAMS
     IGNORED_PARAMS = {'skew'}
 
-    def __init__(self, ver, url, desc='', aauth='', iact='', msg='', params='',
-                 date='', fail='', skew=None):
+    def __init__(self, ver: int, url: str, desc: str = '', aauth: str = '',
+                 iact: str = '', msg: str = '', params: str = '',
+                 date: str = '', fail: str = '', skew: Any = None) -> None:
         self.ver = int(ver)
         self.url = clean_url(url)
         self.desc = desc
@@ -30,6 +32,10 @@ class AuthRequest:
             self.aauth = []
         else:
             raise ValueError("Unparseable aauth value %r" % aauth)
+
+        if skew is not None:
+            # TODO log warning that skew is ignored?
+            pass
 
         if isinstance(iact, bool):
             self.iact = iact
@@ -51,7 +57,7 @@ class AuthRequest:
             self.fail = (fail == 'yes')
 
     @property
-    def params_dict(self):
+    def params_dict(self) -> Dict[str, str]:
         d = {k: getattr(self, k) for k in self.VALID_PARAMS - self.IGNORED_PARAMS}
         if self.iact == True:
             d['iact'] = 'yes'
@@ -64,7 +70,9 @@ class AuthRequest:
         return d
 
     @classmethod
-    def from_params_dict(cls, params_dict, check_supported=True, ignore_unknown=False):
+    def from_params_dict(cls, params_dict: Mapping[str, str],
+                         check_supported: bool = True,
+                         ignore_unknown: bool = False) -> cls:
         d = dict(params_dict)
 
         # Go from 1-long lists of values to just the values
@@ -102,11 +110,11 @@ class AuthRequest:
         return req
 
     @property
-    def as_query_string(self):
+    def as_query_string(self) -> str:
         return urlencode(self.params_dict(), doseq=True)
 
     @classmethod
-    def from_query_string(cls, query_string, *args, **kwargs):
+    def from_query_string(cls, query_string, *args, **kwargs) -> cls:
         params_dict = parse_qs(query_string)
 
         for k, values in params_dict.items():
@@ -116,7 +124,7 @@ class AuthRequest:
         return cls.from_params_dict(params_dict, *args, **kwargs)
 
     @property
-    def data_valid(self):
+    def data_valid(self) -> bool:
         result = all([
             isinstance(self.ver, int),
             isinstance(self.url, str),
@@ -134,5 +142,5 @@ class AuthRequest:
         return result
 
     @property
-    def version_supported(self):
+    def version_supported(self) -> bool:
         return 1 <= self.ver <= 3
