@@ -8,8 +8,10 @@ from .response import AuthResponse
 from .request import AuthRequest
 
 class AuthPrincipal:
-    def __init__(self, userid, auth_methods, ptags=None, session_expiry=None
-        ) -> None:
+    def __init__(self, userid: str, auth_methods: Iterable[str],
+                 ptags: Optional[Iterable[str]] = None,
+                 session_expiry: Optional[datetime.datetime] = None
+            ) -> None:
         self.userid = userid
         self.auth_methods = auth_methods
         if ptags is None:
